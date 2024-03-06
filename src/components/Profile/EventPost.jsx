@@ -1,7 +1,9 @@
-import { Flex, GridItem, Image, Text, useDisclosure, Modal, ModalContent, ModalOverlay, ModalCloseButton, ModalBody, Box, Button, Avatar, Divider, VStack, } from "@chakra-ui/react"
+import { Flex, GridItem, Image, Text, useDisclosure, Modal, ModalContent, ModalOverlay, ModalCloseButton, ModalBody, Box, Button, Avatar, Divider, VStack, ModalHeader, ModalFooter, } from "@chakra-ui/react"
 import { AiFillHeart } from "react-icons/ai"
 import { FaComment } from "react-icons/fa"
 import { MdDelete } from "react-icons/md"
+import { CiCalendarDate } from "react-icons/ci";
+import { ImLocation2 } from "react-icons/im";
 import useUserProfileStore from "../../store/userProfileStore"
 import useAuthStore from "../../store/authStore"
 import useShowToast from "../../hooks/useShowToast"
@@ -10,10 +12,13 @@ import { deleteObject, ref } from "firebase/storage"
 import { firestore, storage } from "../../firebase/firebase"
 import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore"
 import useEventStore from "../../store/eventStore"
+import { useNavigate } from "react-router-dom";
 
 const EventPost = ({ event }) => {
 
+
     const { isOpen, onOpen, onClose } = useDisclosure();
+
     const userProfile = useUserProfileStore(state => state.userProfile)
     const authUser = useAuthStore(state => state.user);
     const showToast = useShowToast();
@@ -22,9 +27,9 @@ const EventPost = ({ event }) => {
     const decrementPostsCount = useUserProfileStore((state) => state.deleteEvent);
 
     const handleDeleteEvent = async () => {
-        if(!window.confirm("Are you sure you want to delete this Event?")) return;
-        if(isDeleting) return;
-        
+        if (!window.confirm("Are you sure you want to delete this Event?")) return;
+        if (isDeleting) return;
+
         try {
             const imageRef = ref(storage, `events/${event.id}`);
             await deleteObject(imageRef);
@@ -42,7 +47,7 @@ const EventPost = ({ event }) => {
 
         } catch (error) {
             showToast("Error", error.message, "error");
-        }finally{
+        } finally {
             setIsDeleting(false)
         }
     }
@@ -85,16 +90,38 @@ const EventPost = ({ event }) => {
                                         </Text>
                                     </Flex>
 
-                                    {authUser.uid === userProfile.uid && (
+                                    {authUser?.uid === userProfile.uid && (
                                         <Button _hover={{ bg: "whiteAlpha.300", color: "red.600" }} borderRadius={4} p={1} >
-                                            <MdDelete size={20} cursor="pointer" isLoading={isDeleting} onClick={handleDeleteEvent}  />
+                                            <MdDelete size={20} cursor="pointer" isLoading={isDeleting} onClick={handleDeleteEvent} />
                                         </Button>
                                     )}
                                 </Flex>
+
+                                <VStack p={3} alignItems={"start"} overflowY={"auto"} >
+                                    <Text fontSize={20} fontWeight={'bold'}>{event.title}</Text>
+                                    <Text>{event.description}</Text>
+                                </VStack>
+
+
                                 <Divider my={4} bg={"gray.500"} />
 
-                                <VStack w={"full"} alignItems={"start"} maxH={"350px"} overflowY={"auto"}>
+                                {/* <VStack w={"full"} alignItems={"start"} maxH={"350px"} overflowY={"auto"}>
                                     comment hai
+                                </VStack> */}
+
+                                <VStack flexDir={'row'} alignItems={"start"} justifyContent={"space-between"} mx={2}>
+                                    <Flex flexDir={'column'} gap={2}>
+                                        <Flex>
+                                            <CiCalendarDate size={24} />
+                                            <Text ml={2}>{event.date}</Text>
+                                        </Flex>
+                                        <Flex>
+                                            <ImLocation2 size={24} />
+                                            <Text ml={2}>{event.location}</Text>
+                                        </Flex>
+                                    </Flex>
+                                    
+                                    <Button color={'white'} bg={'#EC5E71'} >Book</Button>
                                 </VStack>
 
                                 <Divider my={4} bg={"gray.800"} />
@@ -103,6 +130,7 @@ const EventPost = ({ event }) => {
                     </ModalBody>
                 </ModalContent>
             </Modal>
+
 
         </>
 

@@ -87,7 +87,7 @@ const CreateEvent = () => {
                             onChange={(e) => setInputs({ ...inputs, title: e.target.value })}
                         />
 
-                        <Input type='date' mb={3} placeholder='Event Date...'
+                        <Input type='datetime-local'  mb={3} placeholder='Event Date...'
                             value={inputs.date}
                             onChange={(e) => setInputs({ ...inputs, date: e.target.value })}
                         />
