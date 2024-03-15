@@ -1,96 +1,51 @@
 import React from 'react'
 import FeedEvent from './FeedEvent';
-import { SimpleGrid } from '@chakra-ui/react';
+import { Box, Grid, Skeleton, VStack } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import EventDetails from './EventDetails';
+import useGetFeedEvents from '../../hooks/useGetFeedEvents';
 
 const FeedEvents = () => {
 
-    const Events = [
-        {
-            "id": 1,
-            "title": "Fix the navbar",
-            "description": "There is an issue with the navbar on the homepage. It is not displaying correctly on mobile devices.",
-            "author": "Mario",
-            "img": "/img/item.jpg"
-        },
-        {
-            "id": 2,
-            "title": "Add links to the footer",
-            "description": "The footer is currently empty. We need to add some links to important pages on the site.",
-            "author": "Yoshi",
-            "img": "/img/yoshi.png"
-        },
-        {
-            "id": 3,
-            "title": "Update the contact form",
-            "description": "The contact form is not working properly. We need to fix the form validation and make sure the form submissions are being sent to the correct email address.",
-            "author": "Peach",
-            "img": "/img/peac.png"
-        },
-        {
-            "id": 4,
-            "title": "Improve the site's performance",
-            "description": "The site is currently running slow. We need to optimize images and minify CSS and JavaScript to improve the site's loading speed.",
-            "author": "Luigi",
-            "img": "/img/luigi.png"
-        },
-        {
-            "id": 5,
-            "title": "Add social media links",
-            "description": "There are no links to our social media profiles on the site. We need to add links to our Facebook, Twitter, and Instagram accounts in the header and footer.",
-            "author": "Mario",
-            "img": "/img/item.jpg"
-        },
-        {
-            "id": 6,
-            "title": "Implement a search feature",
-            "description": "The site does not have a search feature. We need to add a search bar in the header that allows users to search for specific pages or products on the site.",
-            "author": "Yoshi",
-            "img": "/img/yoshi.png"
-        },
-        {
-            "id": 7,
-            "title": "Fix the responsive layout",
-            "description": "The site's layout is not responsive. It does not look good on mobile devices. We need to make sure the site looks good on all devices.",
-            "author": "Peach",
-            "img": "/img/peach.png"
-        },
-        {
-            "id": 8,
-            "title": "Add a newsletter signup form",
-            "description": "We do not have a way for users to sign up for our newsletter. We need to add a newsletter signup form in the footer that allows users to enter their email address.",
-            "author": "Luigi",
-            "img": "/img/luigi.png"
-        },
-        {
-            "id": 9,
-            "title": "Improve the design",
-            "description": "The site's design is outdated. We need to update the site's color scheme and font to make it look more modern.",
-            "author": "Mario",
-            "img": "/img/mario.png"
-        },
-        {
-            "id": 10,
-            "title": "Add more products to the online store",
-            "description": "We need to add more products to the online store. We also need to add categories and filters to make it easier for users to find what they are looking for.",
-            "author": "Yoshi",
-            "img": "/img/yoshi.png"
-        }
-    ];
+
+    const { isLoading, events } = useGetFeedEvents();
 
 
     return (
-        <SimpleGrid column={2} spacing={10} minChildWidth='220px' px={{ base: 0, md: 10 }}>
+        <Grid templateColumns={{
+            sm: "repeat(1, 1fr)",
+            md: "repeat(3, 1fr)",
+        }}
+            gap={10}
+            columnGap={10}>
 
-            {Events && Events.map(event => (
+            {/* {Events && Events.map(event => (
                 <Link to={`/events/${event.id}`} style={{ textDecoration: 'none' }}>
                     < FeedEvent key={event.id} id={event.id} img={event.img} title={event.title} description={event.description} />
                 </Link>
-            ))}
-        </SimpleGrid>
+            ))} */}
 
-        
+
+            {isLoading &&
+                [0, 1, 2, 3, 4, 5, 6].map((_, idx) => (
+                    <VStack key={idx} alignItems={"flex-start"} gap={4}>
+                        <Skeleton w={"full"}>
+                            <Box h='320px' aspectRatio={4 / 6}>contents wrapped</Box>
+                        </Skeleton>
+                    </VStack>
+                ))}
+
+            {/* {!isLoading && events.length > 0 && events.map((event) =>
+                    <FeedEvent key={event.id} event={event} />
+            )} */}
+
+            {!isLoading && events.length > 0 && events.map((event) =>
+                <Link to={`/events/${event.id}`}>
+                    <FeedEvent key={event.id} event={event} />
+                </Link>
+            )}
+        </Grid>
+
+
     )
 }
 

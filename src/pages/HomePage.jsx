@@ -15,7 +15,7 @@ const HomePage = () => {
         <Box  py={10}>
           <FeedEvents/>
         </Box>
-        <Box flex={3} mr={20} display={{ base: "none", lg: "block" }} maxW={"350px"}>
+        <Box flex={3} mr={15} display={{ base: "none", lg: "block" }} maxW={"240px"}>
           <SuggestedHeader/>
           <SuggestedUsers/>
         </Box>

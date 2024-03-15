@@ -1,4 +1,4 @@
-import { Flex, GridItem, Image, Text, useDisclosure, Modal, ModalContent, ModalOverlay, ModalCloseButton, ModalBody, Box, Button, Avatar, Divider, VStack, ModalHeader, ModalFooter, } from "@chakra-ui/react"
+import { Flex, GridItem, Image, Text, useDisclosure, Modal, ModalContent, ModalOverlay, ModalCloseButton, ModalBody, Box, Button, Avatar, Divider, VStack, ModalHeader, ModalFooter, Link, } from "@chakra-ui/react"
 import { AiFillHeart } from "react-icons/ai"
 import { FaComment } from "react-icons/fa"
 import { MdDelete } from "react-icons/md"
@@ -12,6 +12,7 @@ import { deleteObject, ref } from "firebase/storage"
 import { firestore, storage } from "../../firebase/firebase"
 import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore"
 import useEventStore from "../../store/eventStore"
+import EventDetails from "../FeedEvent/EventDetails";
 import { useNavigate } from "react-router-dom";
 
 const EventPost = ({ event }) => {
@@ -25,6 +26,12 @@ const EventPost = ({ event }) => {
     const [isDeleting, setIsDeleting] = useState(false);
     const deleteEvent = useEventStore(state => state.deleteEvent);
     const decrementPostsCount = useUserProfileStore((state) => state.deleteEvent);
+    const navigate = useNavigate()
+
+    function eventDetail(id) {
+        console.log('clicked ' + id)
+        navigate(`/events/${id}`)
+    }
 
     const handleDeleteEvent = async () => {
         if (!window.confirm("Are you sure you want to delete this Event?")) return;
@@ -120,8 +127,9 @@ const EventPost = ({ event }) => {
                                             <Text ml={2}>{event.location}</Text>
                                         </Flex>
                                     </Flex>
-                                    
-                                    <Button color={'white'} bg={'#EC5E71'} >Book</Button>
+
+                                    <Button color={'white'} bg={'#EC5E71'} onClick={() => eventDetail(event.id)} >Register</Button>
+
                                 </VStack>
 
                                 <Divider my={4} bg={"gray.800"} />
